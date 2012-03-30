@@ -1,10 +1,5 @@
 require "validate_nz_bank_acc/version"
-# ASSUMPTIONS!
-# bank code zero-padded to two chars
-# branch code zero-padded to four chars
-# account number zero-padded to seven characters # 8 character bank account numbers
-# while valid, are not used in NZ. I think. This works with 7 char account numbers
-# account suffix can be 1-4 chars, zero padded
+
 class ValidateNzBankAcc
 
   BANKS = { 1 => {:ranges => [1..999, 1100...1199]},
@@ -48,30 +43,16 @@ class ValidateNzBankAcc
            :g => [0, 0, 0, 0, 0, 0, 0, 1, 3, 7, 1, 3, 7, 1, 0, 3, 7, 1, 10],
            :x => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
           }
-  attr_accessor :number
-  attr_accessor :orig_number
-
-  def initialize(number)
-    @number = number.to_s.dup
-    @orig_number = @number.dup
-    @errors = []
-    pre_validate
+  attr_accessor :bank_id, :branch_id, :account_number, :suffix
+  def initialize(bank_id, branch_id, account_number, suffix)
+    @bank_id = process_input(bank_id)
+    @branch_id = process_input(branch_id)
+    @account_number = process_input(account_number)
+    @suffix = process_input(suffix)
   end
 
   def valid?
     @errors.empty?
-  end
-
-  def format
-    @formatted = true
-    @number = @number.strip.gsub(/[^0-9]/,'')
-    @number = @number[0..12] + @number[13..16].rjust(4,'0')
-  end
-
-  # VALIDATIONS
-  def correct_length?
-    # 03 0432 1234567 01 - 03 0432 1234567 1111 # suffix can be 4 but usually 2-3
-    @number.length == 17
   end
 
   def valid_bank_code?
@@ -92,7 +73,7 @@ class ValidateNzBankAcc
 
   def algo_code
     # If the account base number is below 00990000 then apply algorithm A, otherwise apply algorithm B.
-    BANKS[bank_id][:algo] || (account_id < 990000 ? :a : :b)
+    BANKS[bank_id][:algo] || (account_number < 990000 ? :a : :b)
   end
 
   def algo
@@ -102,12 +83,12 @@ class ValidateNzBankAcc
   def checksum_sum
     if [:e, :g].include? algo_code
       (0..17).inject(0) do |sum, index|
-        s = number_18_char[index].to_i * algo[index]
+        s = number[index].to_i * algo[index]
         2.times { s = s.to_s.chars.map(&:to_i).inject(:+) }
         sum += s
       end
     else
-      (0..17).inject(0) {|sum, index| sum += number_18_char[index].to_i * algo[index]; sum }
+      (0..17).inject(0) {|sum, index| sum += number[index].to_i * algo[index]; sum }
     end
   end
 
@@ -115,44 +96,29 @@ class ValidateNzBankAcc
     checksum_sum % algo[18] == 0
   end
 
-  def number_18_char # account number padded to 8 chars
-    bank_code + branch_code + '0' + account_code + suffix_code
+  def number # account number padded to 8 chars
+    bank_code + branch_code + account_number_code + suffix_code
   end
+
   private
 
-    def pre_validate
-      format
-    end
-
     def bank_code
-      @number[0..1]
-    end
-
-    def bank_id
-      bank_code.to_i
+      @bank_id.to_s.rjust(2,'0')
     end
 
     def branch_code
-      @number[2..5]
+      @branch_id.to_s.rjust(4,'0')
     end
 
-    def branch_id
-      branch_code.to_i
-    end
-
-    def account_code
-      @number[6..13]
-    end
-
-    def account_id
-      account_code.to_i
+    def account_number_code
+      @account_number.to_s.rjust(8,'0')
     end
 
     def suffix_code
-      @number[14..17]
+      @suffix.to_s.rjust(4,'0')
     end
 
-    def suffix_id
-      suffix_code.to_i
+    def process_input(num)
+      num.to_s.gsub(/[^0-9]/,'').to_i
     end
 end
