@@ -1,6 +1,6 @@
 # ValidateNzBankAcc
 
-An implimentation of the process described on page 15 of
+An implementation of the process described on page 15 of
 http://www.ird.govt.nz/resources/a/c/ac60890040b57d0e9bd4df41f9f3ce1d/rwt-nrwt-spec-2010-v3.pdf
 
 ## Installation
@@ -11,7 +11,7 @@ Add this line to your application's Gemfile:
 
 And then execute:
 
-    $ bundle
+    $ bundle install
 
 Or install it yourself as:
 
