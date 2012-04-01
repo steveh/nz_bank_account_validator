@@ -52,7 +52,7 @@ class ValidateNzBankAcc
   end
 
   def valid?
-    @errors.empty?
+    valid_branch_code? && valid_modulo?
   end
 
   def valid_bank_code?
