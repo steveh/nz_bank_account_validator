@@ -1,1 +1,3 @@
-  require File.expand_path("../../lib/validate_nz_bank_acc.rb", __FILE__)
+$LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
+
+require "nz_bank_account_validator"

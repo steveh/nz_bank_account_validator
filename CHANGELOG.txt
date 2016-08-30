@@ -1,0 +1,8 @@
+0.9.0 - Add new ranges from updated IRD document
+        Use new RSpec syntax
+        Accept a string of a full bank account number rather than a collection of parts
+        Add class method to validate without instantiating
+        Rename gem
+0.0.3 - Bugfix
+0.0.2 - Never happened
+0.0.1 - Initial Release
