@@ -1,0 +1,134 @@
+require:
+- rubocop-rspec
+- rubocop-performance
+
+AllCops:
+  TargetRubyVersion: 2.6
+  Exclude:
+  - .git/
+  - bin/*
+  - config/deploy/*
+  - coverage/**/*
+  - db/migrate/*
+  - db/schema.rb
+  - doc/**/*
+  - Gemfile
+  - lib/tasks/*.rake
+  - log/**/*
+  - node_modules/**/*
+  - script/*
+  - spec/**/*
+  - test/**/*
+  - tmp/**/*
+  - vendor/assets/**/*
+  - vendor/gems/*/bin/*
+  - vendor/gems/*/spec/**/*
+
+Layout/AlignParameters:
+  EnforcedStyle: with_first_parameter
+
+Layout/AlignHash:
+  EnforcedHashRocketStyle: table
+  EnforcedColonStyle: table
+
+Lint/UnusedBlockArgument:
+  AllowUnusedKeywordArguments: true
+
+Lint/UnusedMethodArgument:
+  AllowUnusedKeywordArguments: true
+
+Lint/LiteralAsCondition:
+  Enabled: false
+
+Layout/EndAlignment:
+  EnforcedStyleAlignWith: keyword
+  AutoCorrect: true
+
+Layout/BlockAlignment:
+  EnforcedStyleAlignWith: start_of_block
+  AutoCorrect: true
+
+Layout/DefEndAlignment:
+  EnforcedStyleAlignWith: def
+  AutoCorrect: true
+
+Style/AsciiComments:
+  Enabled: false
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: comma
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: comma
+
+Style/WordArray:
+  EnforcedStyle: brackets
+
+Style/SymbolArray:
+  EnforcedStyle: brackets
+
+Style/Lambda:
+  EnforcedStyle: literal
+
+Style/FormatStringToken:
+  EnforcedStyle: template
+
+Style/ClassAndModuleChildren:
+  EnforcedStyle: nested
+
+Style/EmptyMethod:
+  EnforcedStyle: expanded
+
+Style/NumericLiterals:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/DoubleNegation:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/RegexpLiteral:
+  Enabled: false
+
+Style/IfUnlessModifier:
+  Enabled: false
+
+Metrics/LineLength:
+  Enabled: false
+
+Metrics/ClassLength:
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false
+
+Metrics/MethodLength:
+  Enabled: false
+
+Metrics/ModuleLength:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
+Metrics/PerceivedComplexity:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/ParameterLists:
+  Enabled: false
+
+Metrics/BlockNesting:
+  Enabled: false
+
+Naming/UncommunicativeMethodParamName:
+  Enabled: false

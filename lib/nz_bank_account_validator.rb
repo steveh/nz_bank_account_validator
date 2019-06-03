@@ -1,10 +1,11 @@
 # frozen_string_literal: true
-require 'nz_bank_account_validator/version'
+
+require "nz_bank_account_validator/version"
 
 class NzBankAccountValidator
   BankDefinition = Struct.new(:ranges, :algo)
 
-  PATTERN = /\A^(?<bank_id>\d{1,2})[- ]?(?<bank_branch>\d{1,4})[- ]?(?<account_base_number>\d{1,8})[- ]?(?<account_suffix>\d{1,4})\z/
+  PATTERN = /\A^(?<bank_id>\d{1,2})[- ]?(?<bank_branch>\d{1,4})[- ]?(?<account_base_number>\d{1,8})[- ]?(?<account_suffix>\d{1,4})\z/.freeze
 
   RADIX = 10
 
@@ -53,7 +54,7 @@ class NzBankAccountValidator
     e: [0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 5, 4, 3, 2, 0, 0, 0, 1, 11],
     f: [0, 0, 0, 0, 0, 0, 0, 1,  7, 3, 1, 7, 3, 1, 0, 0, 0, 0, 10],
     g: [0, 0, 0, 0, 0, 0, 0, 1,  3, 7, 1, 3, 7, 1, 0, 3, 7, 1, 10],
-    x: [0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
+    x: [0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
   }.freeze
 
   def self.valid?(string)
@@ -62,13 +63,12 @@ class NzBankAccountValidator
 
   def initialize(string)
     match = string.match(PATTERN)
+    return unless match
 
-    if match
-      @bank_id = Integer(match[:bank_id], RADIX)
-      @bank_branch = Integer(match[:bank_branch], RADIX)
-      @account_base_number = Integer(match[:account_base_number], RADIX)
-      @account_suffix = Integer(match[:account_suffix], RADIX)
-    end
+    @bank_id = Integer(match[:bank_id], RADIX)
+    @bank_branch = Integer(match[:bank_branch], RADIX)
+    @account_base_number = Integer(match[:account_base_number], RADIX)
+    @account_suffix = Integer(match[:account_suffix], RADIX)
   end
 
   attr_accessor :bank_id, :bank_branch, :account_base_number, :account_suffix
@@ -79,6 +79,7 @@ class NzBankAccountValidator
     return false unless account_base_number
     return false unless account_suffix
     return false unless valid_modulo?
+
     true
   end
 
@@ -88,21 +89,23 @@ class NzBankAccountValidator
     BANKS.key?(bank_id)
   end
 
-  def bank_definition
-    BANKS[bank_id]
-  end
-
   def valid_bank_branch?
     return false unless bank_definition
     return false unless bank_branch
 
-    bank_definition.ranges.any? do |range|
-      range.include?(bank_branch)
-    end
+    bank_definition.include?(bank_branch)
   end
 
   def valid_modulo?
     (checksum % algo[CHECKSUM_DIGITS]).zero?
+  end
+
+  def bank_definition
+    BANKS[bank_id]
+  end
+
+  def algo
+    ALGOS[algo_code]
   end
 
   def algo_code
@@ -111,12 +114,8 @@ class NzBankAccountValidator
     bank_definition.algo || (account_base_number < ACCOUNT_BASE_NUMBER_CUTOFF ? :a : :b)
   end
 
-  def algo
-    ALGOS[algo_code]
-  end
-
   def number_for_checksum
-    format('%02d%04d%08d%04d', bank_id, bank_branch, account_base_number, account_suffix)
+    format("%02d%04d%08d%04d", bank_id, bank_branch, account_base_number, account_suffix)
   end
 
   def checksum
