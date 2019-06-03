@@ -3,7 +3,20 @@
 require "nz_bank_account_validator/version"
 
 class NzBankAccountValidator
-  BankDefinition = Struct.new(:ranges, :algo)
+  class BankDefinition
+    def initialize(ranges: [], algo: nil)
+      @ranges = ranges
+      @algo = algo
+    end
+
+    attr_reader :algo
+
+    def include?(branch)
+      @ranges.any? do |range|
+        range.include?(branch)
+      end
+    end
+  end
 
   PATTERN = /\A^(?<bank_id>\d{1,2})[- ]?(?<bank_branch>\d{1,4})[- ]?(?<account_base_number>\d{1,8})[- ]?(?<account_suffix>\d{1,4})\z/.freeze
 
@@ -14,36 +27,38 @@ class NzBankAccountValidator
   ACCOUNT_BASE_NUMBER_CUTOFF = 990_000
 
   BANKS = {
-    1  => BankDefinition.new([1..999, 1100..1199, 1800..1899]),
-    2  => BankDefinition.new([1..999, 1200..1299]),
-    3  => BankDefinition.new([1..999, 1300..1399, 1500..1599, 1700..1799, 1900..1999]),
-    6  => BankDefinition.new([1..999, 1400..1499]),
-    8  => BankDefinition.new([6500..6599], :d),
-    9  => BankDefinition.new([0..0], :e),
-    11 => BankDefinition.new([5000..6499, 6600..8999]),
-    12 => BankDefinition.new([3000..3299, 3400..3499, 3600..3699]),
-    13 => BankDefinition.new([4900..4999]),
-    14 => BankDefinition.new([4700..4799]),
-    15 => BankDefinition.new([3900..3999]),
-    16 => BankDefinition.new([4400..4499]),
-    17 => BankDefinition.new([3300..3399]),
-    18 => BankDefinition.new([3500..3599]),
-    19 => BankDefinition.new([4600..4649]),
-    20 => BankDefinition.new([4100..4199]),
-    21 => BankDefinition.new([4800..4899]),
-    22 => BankDefinition.new([4000..4049]),
-    23 => BankDefinition.new([3700..3799]),
-    24 => BankDefinition.new([4300..4349]),
-    25 => BankDefinition.new([2500..2599], :f),
-    26 => BankDefinition.new([2600..2699], :g),
-    27 => BankDefinition.new([3800..3849]),
-    28 => BankDefinition.new([2100..2149], :g),
-    29 => BankDefinition.new([2150..2299], :g),
-    30 => BankDefinition.new([2900..2949]),
-    31 => BankDefinition.new([2800..2849], :x),
-    33 => BankDefinition.new([6700..6799], :f),
-    35 => BankDefinition.new([2400..2499]),
-    38 => BankDefinition.new([9000..9499])
+    1  => BankDefinition.new(ranges: [1..999, 1100..1199, 1800..1899]),
+    2  => BankDefinition.new(ranges: [1..999, 1200..1299]),
+    3  => BankDefinition.new(ranges: [1..999, 1300..1399, 1500..1599, 1700..1799, 1900..1999, 7350..7399]),
+    4  => BankDefinition.new(ranges: [2020..2024]),
+    6  => BankDefinition.new(ranges: [1..999, 1400..1499]),
+    8  => BankDefinition.new(ranges: [6500..6599], algo: :d),
+    9  => BankDefinition.new(ranges: [0..0], algo: :e),
+    10 => BankDefinition.new(ranges: [5165..5169]),
+    11 => BankDefinition.new(ranges: [5000..6499, 6600..8999]),
+    12 => BankDefinition.new(ranges: [3000..3299, 3400..3499, 3600..3699]),
+    13 => BankDefinition.new(ranges: [4900..4999]),
+    14 => BankDefinition.new(ranges: [4700..4799]),
+    15 => BankDefinition.new(ranges: [3900..3999]),
+    16 => BankDefinition.new(ranges: [4400..4499]),
+    17 => BankDefinition.new(ranges: [3300..3399]),
+    18 => BankDefinition.new(ranges: [3500..3599]),
+    19 => BankDefinition.new(ranges: [4600..4649]),
+    20 => BankDefinition.new(ranges: [4100..4199]),
+    21 => BankDefinition.new(ranges: [4800..4899]),
+    22 => BankDefinition.new(ranges: [4000..4049]),
+    23 => BankDefinition.new(ranges: [3700..3799]),
+    24 => BankDefinition.new(ranges: [4300..4349]),
+    25 => BankDefinition.new(ranges: [2500..2599], algo: :f),
+    26 => BankDefinition.new(ranges: [2600..2699], algo: :g),
+    27 => BankDefinition.new(ranges: [3800..3849]),
+    28 => BankDefinition.new(ranges: [2100..2149], algo: :g),
+    29 => BankDefinition.new(ranges: [2150..2299], algo: :g),
+    30 => BankDefinition.new(ranges: [2900..2949]),
+    31 => BankDefinition.new(ranges: [2800..2849], algo: :x),
+    33 => BankDefinition.new(ranges: [6700..6799], algo: :f),
+    35 => BankDefinition.new(ranges: [2400..2499]),
+    38 => BankDefinition.new(ranges: [9000..9499]),
   }.freeze
 
   ALGOS = {
