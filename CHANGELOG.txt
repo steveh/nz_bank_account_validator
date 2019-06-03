@@ -1,3 +1,5 @@
+1.1.0 - Tidy up code, add more bank accounts from updated document
+1.0.0 - First public release
 0.9.0 - Add new ranges from updated IRD document
         Use new RSpec syntax
         Accept a string of a full bank account number rather than a collection of parts
