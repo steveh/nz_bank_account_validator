@@ -10,6 +10,7 @@ RSpec.describe NzBankAccountValidator do
   let(:ex1) { validator('01-902-0068389-00') }
   let(:ex2) { validator('08-6523-1954512-001') }
   let(:ex3) { validator('26-2600-0320871-032') }
+  let(:ex4) { validator('389004055424701') }
 
   it 'has a version number' do
     expect(NzBankAccountValidator::VERSION).not_to be nil
@@ -54,12 +55,14 @@ RSpec.describe NzBankAccountValidator do
       expect(ex1.algo_code).to eq(:a)
       expect(ex2.algo_code).to eq(:d)
       expect(ex3.algo_code).to eq(:g)
+      expect(ex4.algo_code).to eq(:b)
     end
   end
 
   describe '#number_for_checksum' do
     it 'should zero pad the 7 digit account number to 8 characters' do
       expect(validator('08-0123-0034141-03').number_for_checksum).to eq('080123000341410003')
+      expect(ex4.number_for_checksum).to eq('389004005542470001')
     end
   end
 
@@ -72,10 +75,11 @@ RSpec.describe NzBankAccountValidator do
   end
 
   describe '#valid_modulo?' do
-    it 'should valid modulo for the example in the pdf' do
+    it 'should valid modulo for the examples in the pdf' do
       expect(ex1).to be_valid_modulo
-      expect(ex1).to be_valid_modulo
-      expect(ex1).to be_valid_modulo
+      expect(ex2).to be_valid_modulo
+      expect(ex3).to be_valid_modulo
+      expect(ex4).to be_valid_modulo
     end
   end
 
