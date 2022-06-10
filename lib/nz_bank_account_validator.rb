@@ -18,7 +18,8 @@ class NzBankAccountValidator
     end
   end
 
-  PATTERN = /\A^(?<bank_id>\d{1,2})[- ]?(?<bank_branch>\d{1,4})[- ]?(?<account_base_number>\d{1,8})[- ]?(?<account_suffix>\d{1,4})\z/.freeze
+  IBAN_PATTERN = /\A^(?<bank_id>\d{1,2})[- ]?(?<bank_branch>\d{1,4})[- ]?(?<account_base_number>\d{1,8})[- ]?(?<account_suffix>\d{1,4})\z/.freeze
+  NZBN_PATTERN = /\A^(?<bank_id>\d{2})[- ]?(?<bank_branch>\d{4})[- ]?(?<account_base_number>\d{7})[- ]?(?<account_suffix>\d{2,3})\z/.freeze
 
   RADIX = 10
 
@@ -76,8 +77,13 @@ class NzBankAccountValidator
     new(string).valid?
   end
 
-  def initialize(string)
-    match = string.match(PATTERN)
+  def initialize(string, iban: false)
+    if iban
+      match = string.match(IBAN_PATTERN)
+    else
+      match = string.match(NZBN_PATTERN)
+    end
+
     return unless match
 
     @bank_id = Integer(match[:bank_id], RADIX)
