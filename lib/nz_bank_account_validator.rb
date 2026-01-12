@@ -31,7 +31,7 @@ class NzBankAccountValidator
     1  => BankDefinition.new(ranges: [1..999, 1100..1199, 1800..1899]),
     2  => BankDefinition.new(ranges: [1..999, 1200..1299]),
     3  => BankDefinition.new(ranges: [1..999, 1300..1399, 1500..1599, 1700..1799, 1900..1999, 7350..7399]),
-    4  => BankDefinition.new(ranges: [2020..2024]),
+    4  => BankDefinition.new(ranges: [2014..2024]),
     6  => BankDefinition.new(ranges: [1..999, 1400..1499]),
     8  => BankDefinition.new(ranges: [6500..6599], algo: :d),
     9  => BankDefinition.new(ranges: [0..0], algo: :e),
