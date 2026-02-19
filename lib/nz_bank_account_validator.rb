@@ -18,7 +18,8 @@ class NzBankAccountValidator
     end
   end
 
-  PATTERN = /\A^(?<bank_id>\d{1,2})[- ]?(?<bank_branch>\d{1,4})[- ]?(?<account_base_number>\d{1,8})[- ]?(?<account_suffix>\d{1,4})\z/.freeze
+  IBAN_PATTERN = /\A^(?<bank_id>\d{1,2})[- ]?(?<bank_branch>\d{1,4})[- ]?(?<account_base_number>\d{1,8})[- ]?(?<account_suffix>\d{1,4})\z/.freeze
+  NZBN_PATTERN = /\A^(?<bank_id>\d{2})[- ]?(?<bank_branch>\d{4})[- ]?(?<account_base_number>\d{7})[- ]?(?<account_suffix>\d{2,3})\z/.freeze
 
   RADIX = 10
 
@@ -30,7 +31,7 @@ class NzBankAccountValidator
     1  => BankDefinition.new(ranges: [1..999, 1100..1199, 1800..1899]),
     2  => BankDefinition.new(ranges: [1..999, 1200..1299]),
     3  => BankDefinition.new(ranges: [1..999, 1300..1399, 1500..1599, 1700..1799, 1900..1999, 7350..7399]),
-    4  => BankDefinition.new(ranges: [2020..2024]),
+    4  => BankDefinition.new(ranges: [2014..2024]),
     6  => BankDefinition.new(ranges: [1..999, 1400..1499]),
     8  => BankDefinition.new(ranges: [6500..6599], algo: :d),
     9  => BankDefinition.new(ranges: [0..0], algo: :e),
@@ -76,8 +77,13 @@ class NzBankAccountValidator
     new(string).valid?
   end
 
-  def initialize(string)
-    match = string.match(PATTERN)
+  def initialize(string, iban: false)
+    if iban
+      match = string.match(IBAN_PATTERN)
+    else
+      match = string.match(NZBN_PATTERN)
+    end
+
     return unless match
 
     @bank_id = Integer(match[:bank_id], RADIX)
