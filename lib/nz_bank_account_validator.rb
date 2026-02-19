@@ -18,8 +18,8 @@ class NzBankAccountValidator
     end
   end
 
-  IBAN_PATTERN = /\A^(?<bank_id>\d{1,2})[- ]?(?<bank_branch>\d{1,4})[- ]?(?<account_base_number>\d{1,8})[- ]?(?<account_suffix>\d{1,4})\z/.freeze
-  NZBN_PATTERN = /\A^(?<bank_id>\d{2})[- ]?(?<bank_branch>\d{4})[- ]?(?<account_base_number>\d{7})[- ]?(?<account_suffix>\d{2,3})\z/.freeze
+  IBAN_PATTERN = /\A^(?<bank_id>\d{1,2})[- ]?(?<bank_branch>\d{1,4})[- ]?(?<account_base_number>\d{1,8})[- ]?(?<account_suffix>\d{1,4})\z/
+  NZBN_PATTERN = /\A^(?<bank_id>\d{2})[- ]?(?<bank_branch>\d{4})[- ]?(?<account_base_number>\d{7})[- ]?(?<account_suffix>\d{2,3})\z/
 
   RADIX = 10
 
@@ -78,11 +78,11 @@ class NzBankAccountValidator
   end
 
   def initialize(string, iban: false)
-    if iban
-      match = string.match(IBAN_PATTERN)
-    else
-      match = string.match(NZBN_PATTERN)
-    end
+    match = if iban
+              string.match(IBAN_PATTERN)
+            else
+              string.match(NZBN_PATTERN)
+            end
 
     return unless match
 
@@ -143,12 +143,12 @@ class NzBankAccountValidator
     if [:e, :g].include?(algo_code)
       (0...CHECKSUM_DIGITS).inject(0) do |sum, index|
         s = number_for_checksum[index].to_i * algo[index]
-        2.times { s = s.to_s.chars.map(&:to_i).inject(:+) }
+        2.times { s = s.to_s.chars.sum(&:to_i) }
         sum + s
       end
     else
       (0...CHECKSUM_DIGITS).inject(0) do |sum, index|
-        sum + number_for_checksum[index].to_i * algo[index]
+        sum + (number_for_checksum[index].to_i * algo[index])
       end
     end
   end

@@ -1,33 +1,23 @@
-require:
+plugins:
 - rubocop-rspec
 - rubocop-performance
 
 AllCops:
-  TargetRubyVersion: 2.6
+  TargetRubyVersion: 3.2
+  NewCops: enable
   Exclude:
   - .git/
   - bin/*
-  - config/deploy/*
   - coverage/**/*
-  - db/migrate/*
-  - db/schema.rb
   - doc/**/*
   - Gemfile
   - lib/tasks/*.rake
-  - log/**/*
-  - node_modules/**/*
-  - script/*
   - spec/**/*
-  - test/**/*
-  - tmp/**/*
-  - vendor/assets/**/*
-  - vendor/gems/*/bin/*
-  - vendor/gems/*/spec/**/*
 
-Layout/AlignParameters:
+Layout/ParameterAlignment:
   EnforcedStyle: with_first_parameter
 
-Layout/AlignHash:
+Layout/HashAlignment:
   EnforcedHashRocketStyle: table
   EnforcedColonStyle: table
 
@@ -100,7 +90,7 @@ Style/RegexpLiteral:
 Style/IfUnlessModifier:
   Enabled: false
 
-Metrics/LineLength:
+Layout/LineLength:
   Enabled: false
 
 Metrics/ClassLength:
@@ -130,5 +120,5 @@ Metrics/ParameterLists:
 Metrics/BlockNesting:
   Enabled: false
 
-Naming/UncommunicativeMethodParamName:
+Naming/MethodParameterName:
   Enabled: false
