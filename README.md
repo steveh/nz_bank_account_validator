@@ -1,10 +1,8 @@
-# NzBankAccountValidator
-
-[![Build Status](https://travis-ci.org/steveh/nz_bank_account_validator.svg?branch=master)](https://travis-ci.org/steveh/nz_bank_account_validator)
-[![Code Climate](https://codeclimate.com/github/steveh/nz_bank_account_validator/badges/gpa.svg)](https://codeclimate.com/github/steveh/nz_bank_account_validator)
-[![Test Coverage](https://codeclimate.com/github/steveh/nz_bank_account_validator/badges/coverage.svg)](https://codeclimate.com/github/steveh/nz_bank_account_validator/coverage)
+# NZ Bank Account Validator
 
 An implementation of the process described on page 10 of the [IRD RWT - NRWT 2008 Specification](https://www.ird.govt.nz/resources/d/8/d8e49dce-1bda-4875-8acf-9ebf908c6e17/rwt-nrwt-spec-2014.pdf).
+
+There are no dependencies. All non-EOL versions of Ruby should be supported.
 
 
 ## Installation
