@@ -1,3 +1,7 @@
+2.0.0 - Drop support for Ruby < 3.2
+        Support using either the more common NZBN format or IBAN format (Ben Anderson)
+        Support numbers without spacing or hyphens
+        Switch from Travis (RIP) to Github Actions
 1.1.0 - Tidy up code, add more bank accounts from updated document
 1.0.0 - First public release
 0.9.0 - Add new ranges from updated IRD document
